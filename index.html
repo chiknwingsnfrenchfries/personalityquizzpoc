@@ -40,123 +40,198 @@
       max-width: 100%;
       height: auto;
     }
+    .lang-toggle {
+      text-align: center;
+      margin-bottom: 1em;
+    }
   </style>
 </head>
 <body>
-  <h1>What Study Field Suits You?</h1>
+  <div class="lang-toggle">
+    <button onclick="setLanguage('en')">English</button>
+    <button onclick="setLanguage('fr')">Français</button>
+  </div>
+  <h1 id="quiz-title">What Study Field Suits You?</h1>
   <form id="quiz">
-    <div class="question-step active" id="step-1">
-      <div class="question">
-        <p>1. I enjoy solving puzzles or figuring out how things work.</p>
-        <div class="gif-container">
-          <img src="https://media.giphy.com/media/l0ExncehJzexFpRHq/giphy.gif" alt="Puzzle gif">
-        </div>
-        <label><input type="radio" name="q1" value="Investigative"> Strongly agree</label><br />
-        <label><input type="radio" name="q1" value="Conventional"> Neutral</label><br />
-        <label><input type="radio" name="q1" value="Social"> Strongly disagree</label>
-        <button type="button" onclick="nextStep(1)">Submit</button>
-      </div>
-    </div>
-
-    <div class="question-step" id="step-2">
-      <div class="question">
-        <p>2. I love creating things—writing, drawing, or designing.</p>
-        <div class="gif-container">
-          <img src="https://media.giphy.com/media/3o7aD2saalBwwftBIY/giphy.gif" alt="Creative gif">
-        </div>
-        <label><input type="radio" name="q2" value="Artistic"> Strongly agree</label><br />
-        <label><input type="radio" name="q2" value="Investigative"> Neutral</label><br />
-        <label><input type="radio" name="q2" value="Realistic"> Strongly disagree</label>
-        <button type="button" onclick="nextStep(2)">Submit</button>
-      </div>
-    </div>
-
-    <div class="question-step" id="step-3">
-      <div class="question">
-        <p>3. I enjoy helping people solve personal or social problems.</p>
-        <div class="gif-container">
-          <img src="https://media.giphy.com/media/l2JhGxvAm7RzEyGZq/giphy.gif" alt="Helping gif">
-        </div>
-        <label><input type="radio" name="q3" value="Social"> Strongly agree</label><br />
-        <label><input type="radio" name="q3" value="Enterprising"> Neutral</label><br />
-        <label><input type="radio" name="q3" value="Investigative"> Strongly disagree</label>
-        <button type="button" onclick="nextStep(3)">Submit</button>
-      </div>
-    </div>
-
-    <div class="question-step" id="step-4">
-      <div class="question">
-        <p>4. I like organizing tasks, planning, or working with data.</p>
-        <div class="gif-container">
-          <img src="https://media.giphy.com/media/xT0BKiaM2VGJ411CDG/giphy.gif" alt="Organizing gif">
-        </div>
-        <label><input type="radio" name="q4" value="Conventional"> Strongly agree</label><br />
-        <label><input type="radio" name="q4" value="Enterprising"> Neutral</label><br />
-        <label><input type="radio" name="q4" value="Artistic"> Strongly disagree</label>
-        <button type="button" onclick="nextStep(4)">Submit</button>
-      </div>
-    </div>
-
-    <div class="question-step" id="step-5">
-      <div class="question">
-        <p>5. I prefer hands-on work—building, fixing, or operating equipment.</p>
-        <div class="gif-container">
-          <img src="https://media.giphy.com/media/XIqCQx02E1U9W/giphy.gif" alt="Hands-on gif">
-        </div>
-        <label><input type="radio" name="q5" value="Realistic"> Strongly agree</label><br />
-        <label><input type="radio" name="q5" value="Conventional"> Neutral</label><br />
-        <label><input type="radio" name="q5" value="Social"> Strongly disagree</label>
-        <button type="button" onclick="calculateResult()">Submit</button>
-      </div>
-    </div>
+    <!-- Questions will be dynamically generated -->
   </form>
 
   <div class="results" id="results"></div>
 
   <script>
-    function nextStep(currentStep) {
-      const current = document.getElementById(`step-${currentStep}`);
-      const next = document.getElementById(`step-${currentStep + 1}`);
-      if (!document.querySelector(`input[name="q${currentStep}"]:checked`)) {
-        alert("Please select an answer before continuing.");
+    const questions = {
+      en: [
+        {
+          text: "I enjoy solving puzzles or figuring out how things work.",
+          gif: "https://media.giphy.com/media/l0ExncehJzexFpRHq/giphy.gif",
+          name: "q1",
+          options: ["Investigative", "Conventional", "Social"]
+        },
+        {
+          text: "I love creating things—writing, drawing, or designing.",
+          gif: "https://media.giphy.com/media/3o7aD2saalBwwftBIY/giphy.gif",
+          name: "q2",
+          options: ["Artistic", "Investigative", "Realistic"]
+        },
+        {
+          text: "I enjoy helping people solve personal or social problems.",
+          gif: "https://media.giphy.com/media/l2JhGxvAm7RzEyGZq/giphy.gif",
+          name: "q3",
+          options: ["Social", "Enterprising", "Investigative"]
+        },
+        {
+          text: "I like organizing tasks, planning, or working with data.",
+          gif: "https://media.giphy.com/media/xT0BKiaM2VGJ411CDG/giphy.gif",
+          name: "q4",
+          options: ["Conventional", "Enterprising", "Artistic"]
+        },
+        {
+          text: "I prefer hands-on work—building, fixing, or operating equipment.",
+          gif: "https://media.giphy.com/media/XIqCQx02E1U9W/giphy.gif",
+          name: "q5",
+          options: ["Realistic", "Conventional", "Social"]
+        },
+        {
+          text: "I enjoy taking the lead on group projects or initiatives.",
+          gif: "https://media.giphy.com/media/l0MYOUI5XfRkYVwFG/giphy.gif",
+          name: "q6",
+          options: ["Enterprising", "Social", "Artistic"]
+        },
+        {
+          text: "I find meaning in expressing emotions and ideas creatively.",
+          gif: "https://media.giphy.com/media/26gsgIkR1WvlZrLFe/giphy.gif",
+          name: "q7",
+          options: ["Artistic", "Realistic", "Conventional"]
+        }
+      ],
+      fr: [
+        {
+          text: "J'aime résoudre des énigmes ou comprendre comment les choses fonctionnent.",
+          gif: "https://media.giphy.com/media/l0ExncehJzexFpRHq/giphy.gif",
+          name: "q1",
+          options: ["Investigatif", "Conventionnel", "Social"]
+        },
+        {
+          text: "J'aime créer des choses : écrire, dessiner ou concevoir.",
+          gif: "https://media.giphy.com/media/3o7aD2saalBwwftBIY/giphy.gif",
+          name: "q2",
+          options: ["Artistique", "Investigatif", "Réaliste"]
+        },
+        {
+          text: "J'aime aider les gens à résoudre des problèmes personnels ou sociaux.",
+          gif: "https://media.giphy.com/media/l2JhGxvAm7RzEyGZq/giphy.gif",
+          name: "q3",
+          options: ["Social", "Entreprenant", "Investigatif"]
+        },
+        {
+          text: "J'aime organiser des tâches, planifier ou travailler avec des données.",
+          gif: "https://media.giphy.com/media/xT0BKiaM2VGJ411CDG/giphy.gif",
+          name: "q4",
+          options: ["Conventionnel", "Entreprenant", "Artistique"]
+        },
+        {
+          text: "Je préfère le travail manuel : construire, réparer ou utiliser des équipements.",
+          gif: "https://media.giphy.com/media/XIqCQx02E1U9W/giphy.gif",
+          name: "q5",
+          options: ["Réaliste", "Conventionnel", "Social"]
+        },
+        {
+          text: "J'aime diriger des projets ou initiatives de groupe.",
+          gif: "https://media.giphy.com/media/l0MYOUI5XfRkYVwFG/giphy.gif",
+          name: "q6",
+          options: ["Entreprenant", "Social", "Artistique"]
+        },
+        {
+          text: "Je trouve du sens à exprimer mes émotions et idées de façon créative.",
+          gif: "https://media.giphy.com/media/26gsgIkR1WvlZrLFe/giphy.gif",
+          name: "q7",
+          options: ["Artistique", "Réaliste", "Conventionnel"]
+        }
+      ]
+    };
+
+    let currentStep = 0;
+    let lang = 'en';
+
+    function setLanguage(selectedLang) {
+      lang = selectedLang;
+      document.getElementById('quiz-title').textContent = lang === 'fr' ? 'Quel domaine d’étude vous convient le mieux ?' : 'What Study Field Suits You?';
+      renderQuiz();
+    }
+
+    function renderQuiz() {
+      const quiz = document.getElementById('quiz');
+      quiz.innerHTML = '';
+      currentStep = 0;
+      questions[lang].forEach((q, index) => {
+        const step = document.createElement('div');
+        step.className = 'question-step';
+        if (index === 0) step.classList.add('active');
+
+        const html = `
+          <div class="question">
+            <p>${index + 1}. ${q.text}</p>
+            <div class="gif-container">
+              <img src="${q.gif}" alt="GIF">
+            </div>
+            ${q.options.map(opt => `<label><input type="radio" name="${q.name}" value="${opt}"> ${opt}</label><br />`).join('')}
+            <button type="button" onclick="handleNext(${index})">${lang === 'fr' ? 'Soumettre' : 'Submit'}</button>
+          </div>
+        `;
+        step.innerHTML = html;
+        quiz.appendChild(step);
+      });
+    }
+
+    function handleNext(index) {
+      const q = questions[lang][index].name;
+      if (!document.querySelector(`input[name='${q}']:checked`)) {
+        alert(lang === 'fr' ? 'Veuillez sélectionner une réponse.' : 'Please select an answer.');
         return;
       }
-      current.classList.remove("active");
-      if (next) {
-        next.classList.add("active");
+      const steps = document.querySelectorAll('.question-step');
+      steps[index].classList.remove('active');
+      if (index + 1 < steps.length) {
+        steps[index + 1].classList.add('active');
+      } else {
+        calculateResult();
       }
     }
 
     function calculateResult() {
-      if (!document.querySelector("input[name='q5']:checked")) {
-        alert("Please select an answer before continuing.");
-        return;
-      }
-
-      const form = document.getElementById('quiz');
-      const formData = new FormData(form);
+      const formData = new FormData(document.getElementById('quiz'));
       const scores = {};
-
-      for (let [name, value] of formData.entries()) {
+      for (let [_, value] of formData.entries()) {
         scores[value] = (scores[value] || 0) + 1;
       }
-
       const topTrait = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
 
       const fieldMatches = {
-        Investigative: "Engineering, Health Sciences, or Computer Science",
-        Artistic: "Arts, Design, or Humanities",
-        Social: "Education, Psychology, or Social Work",
-        Enterprising: "Business, Marketing, or Law",
-        Conventional: "Accounting, Administration, or Logistics",
-        Realistic: "Trades, Technology, or Applied Sciences"
+        en: {
+          Investigative: "Engineering, Health Sciences, or Computer Science",
+          Artistic: "Arts, Design, or Humanities",
+          Social: "Education, Psychology, or Social Work",
+          Enterprising: "Business, Marketing, or Law",
+          Conventional: "Accounting, Administration, or Logistics",
+          Realistic: "Trades, Technology, or Applied Sciences"
+        },
+        fr: {
+          Investigatif: "Génie, sciences de la santé ou informatique",
+          Artistique: "Arts, design ou lettres et sciences humaines",
+          Social: "Éducation, psychologie ou travail social",
+          Entreprenant: "Affaires, marketing ou droit",
+          Conventionnel: "Comptabilité, administration ou logistique",
+          Réaliste: "Métiers, technologies ou sciences appliquées"
+        }
       };
 
-      const resultText = fieldMatches[topTrait] || "a mix of different fields";
+      const resultText = fieldMatches[lang][topTrait] || (lang === 'fr' ? 'un mélange de domaines différents' : 'a mix of different fields');
 
       document.getElementById('quiz').style.display = 'none';
-      document.getElementById('results').textContent = `You're most suited for: ${resultText}`;
+      document.getElementById('results').textContent = (lang === 'fr' ? 'Votre domaine idéal : ' : "You're most suited for: ") + resultText;
     }
+
+    setLanguage('en'); // default
   </script>
 </body>
 </html>
