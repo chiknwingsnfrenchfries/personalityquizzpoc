@@ -79,4 +79,82 @@
   <script>
     const questions = [
       { text: "I enjoy solving math or science problems in my spare time.", gif: "https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif", name: "q1", options: ["Investigative"] },
-      { text: "I like sketching, painting, or creating digital art.",
+      { text: "I like sketching, painting, or creating digital art.", gif: "https://media.giphy.com/media/3o7aD2saalBwwftBIY/giphy.gif", name: "q2", options: ["Artistic"] },
+      { text: "I often help friends talk through personal or emotional challenges.", gif: "https://media.giphy.com/media/l2JhGxvAm7RzEyGZq/giphy.gif", name: "q3", options: ["Social"] },
+      { text: "I naturally take charge when working in a team setting.", gif: "https://media.giphy.com/media/l0MYOUI5XfRkYVwFG/giphy.gif", name: "q4", options: ["Enterprising"] },
+      { text: "I find satisfaction in organizing data, making to-do lists, or sorting files.", gif: "https://media.giphy.com/media/xT0BKiaM2VGJ411CDG/giphy.gif", name: "q5", options: ["Conventional"] },
+      { text: "I enjoy fixing things, building structures, or working with tools.", gif: "https://media.giphy.com/media/XIqCQx02E1U9W/giphy.gif", name: "q6", options: ["Realistic"] },
+      { text: "I feel fulfilled when expressing thoughts through music, writing, or film.", gif: "https://media.giphy.com/media/26gsgIkR1WvlZrLFe/giphy.gif", name: "q7", options: ["Artistic"] }
+    ];
+
+    const fieldMatches = {
+      Investigative: "Engineering, Health Sciences, or Computer Science",
+      Artistic: "Arts, Design, or Humanities",
+      Social: "Education, Psychology, or Social Work",
+      Enterprising: "Business, Marketing, or Law",
+      Conventional: "Accounting, Administration, or Logistics",
+      Realistic: "Trades, Technology, or Applied Sciences"
+    };
+
+    let currentStep = 0;
+
+    function renderQuiz() {
+      const quiz = document.getElementById("quiz");
+      quiz.innerHTML = "";
+      questions.forEach((q, index) => {
+        const step = document.createElement("div");
+        step.className = "question-step";
+        if (index === 0) step.classList.add("active");
+
+        step.innerHTML = `
+          <div class="question">
+            <p>${index + 1}. ${q.text}</p>
+            <div class="gif-container">
+              <img src="${q.gif}" alt="GIF">
+            </div>
+            <label><input type="radio" name="${q.name}" value="${q.options[0]}"> Yes</label>
+            <label><input type="radio" name="${q.name}" value="None"> No</label>
+            <button type="button" onclick="handleNext(${index})">Submit</button>
+          </div>
+        `;
+        quiz.appendChild(step);
+      });
+    }
+
+    function handleNext(index) {
+      const q = questions[index].name;
+      if (!document.querySelector(`input[name='${q}']:checked`)) {
+        alert("Please select an answer.");
+        return;
+      }
+
+      const steps = document.querySelectorAll(".question-step");
+      steps[index].classList.remove("active");
+      if (index + 1 < steps.length) {
+        steps[index + 1].classList.add("active");
+      } else {
+        calculateResult();
+      }
+    }
+
+    function calculateResult() {
+      const formData = new FormData(document.getElementById("quiz"));
+      const scores = {};
+      for (let [_, value] of formData.entries()) {
+        if (value !== "None") {
+          scores[value] = (scores[value] || 0) + 1;
+        }
+      }
+
+      const topTrait = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+      const resultText = fieldMatches[topTrait] || "a mix of different fields";
+
+      document.getElementById("quiz").style.display = "none";
+      document.getElementById("results").textContent = `You're most suited for: ${resultText}`;
+    }
+
+    renderQuiz();
+  </script>
+</body>
+</html>
+<!-- END OF ENGLISH QUIZ -->
