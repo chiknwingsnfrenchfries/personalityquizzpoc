@@ -1,164 +1,82 @@
+<!-- START OF ENGLISH QUIZ -->
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Test de personnalité CÉGEP</title>
+  <title>CEGEP Personality Test</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      max-width: 600px;
-      margin: auto;
-      padding: 2em;
+      font-family: system-ui, sans-serif;
+      padding: 1.5rem;
+      margin: 0;
+      background: #f9f9f9;
     }
+
     h1 {
+      font-size: 1.5rem;
       text-align: center;
+      margin-bottom: 1.5rem;
     }
+
     .question-step {
       display: none;
+      opacity: 0;
+      transition: opacity 0.4s ease-in-out;
     }
+
     .question-step.active {
       display: block;
+      opacity: 1;
     }
+
     .question p {
       font-weight: bold;
+      font-size: 1.1rem;
     }
-    .results {
-      margin-top: 2em;
-      font-size: 1.2em;
-    }
-    button {
-      padding: 0.5em 1em;
-      font-size: 1em;
-      margin-top: 1em;
-    }
+
     .gif-container {
       text-align: center;
       margin: 1em 0;
     }
+
     .gif-container img {
       max-width: 100%;
       height: auto;
+      border-radius: 10px;
+    }
+
+    label {
+      display: block;
+      padding: 0.5em 0;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.2rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      margin-top: 1em;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .results {
+      margin-top: 2rem;
+      font-size: 1.2rem;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <h1 id="quiz-title">Quel domaine d’étude vous convient le mieux ?</h1>
+  <h1>What Study Field Suits You?</h1>
   <form id="quiz"></form>
   <div class="results" id="results"></div>
 
   <script>
     const questions = [
-      {
-        text: "J'aime résoudre des problèmes de mathématiques ou de sciences pendant mon temps libre.",
-        gif: "https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif",
-        name: "q1",
-        options: ["Investigatif"]
-      },
-      {
-        text: "J'aime dessiner, peindre ou créer de l'art numérique.",
-        gif: "https://media.giphy.com/media/3o7aD2saalBwwftBIY/giphy.gif",
-        name: "q2",
-        options: ["Artistique"]
-      },
-      {
-        text: "J'aide souvent mes amis à parler de leurs défis personnels ou émotionnels.",
-        gif: "https://media.giphy.com/media/l2JhGxvAm7RzEyGZq/giphy.gif",
-        name: "q3",
-        options: ["Social"]
-      },
-      {
-        text: "Je prends naturellement les devants dans les projets d'équipe.",
-        gif: "https://media.giphy.com/media/l0MYOUI5XfRkYVwFG/giphy.gif",
-        name: "q4",
-        options: ["Entreprenant"]
-      },
-      {
-        text: "J'aime organiser des données, faire des listes ou trier des fichiers.",
-        gif: "https://media.giphy.com/media/xT0BKiaM2VGJ411CDG/giphy.gif",
-        name: "q5",
-        options: ["Conventionnel"]
-      },
-      {
-        text: "J'aime réparer des choses, construire ou utiliser des outils.",
-        gif: "https://media.giphy.com/media/XIqCQx02E1U9W/giphy.gif",
-        name: "q6",
-        options: ["Réaliste"]
-      },
-      {
-        text: "Je me sens épanoui lorsque j'exprime mes idées à travers la musique, l'écriture ou le cinéma.",
-        gif: "https://media.giphy.com/media/26gsgIkR1WvlZrLFe/giphy.gif",
-        name: "q7",
-        options: ["Artistique"]
-      }
-    ];
-
-    const fieldMatches = {
-      Investigatif: "Génie, sciences de la santé ou informatique",
-      Artistique: "Arts, design ou lettres et sciences humaines",
-      Social: "Éducation, psychologie ou travail social",
-      Entreprenant: "Affaires, marketing ou droit",
-      Conventionnel: "Comptabilité, administration ou logistique",
-      Réaliste: "Métiers, technologies ou sciences appliquées"
-    };
-
-    let currentStep = 0;
-
-    function renderQuiz() {
-      const quiz = document.getElementById('quiz');
-      quiz.innerHTML = '';
-      questions.forEach((q, index) => {
-        const step = document.createElement('div');
-        step.className = 'question-step';
-        if (index === 0) step.classList.add('active');
-
-        const html = `
-          <div class="question">
-            <p>${index + 1}. ${q.text}</p>
-            <div class="gif-container">
-              <img src="${q.gif}" alt="GIF">
-            </div>
-            <label><input type="radio" name="${q.name}" value="${q.options[0]}"> Oui</label><br />
-            <label><input type="radio" name="${q.name}" value="None"> Non</label><br />
-            <button type="button" onclick="handleNext(${index})">Soumettre</button>
-          </div>
-        `;
-        step.innerHTML = html;
-        quiz.appendChild(step);
-      });
-    }
-
-    function handleNext(index) {
-      const q = questions[index].name;
-      if (!document.querySelector(`input[name='${q}']:checked`)) {
-        alert('Veuillez sélectionner une réponse.');
-        return;
-      }
-      const steps = document.querySelectorAll('.question-step');
-      steps[index].classList.remove('active');
-      if (index + 1 < steps.length) {
-        steps[index + 1].classList.add('active');
-      } else {
-        calculateResult();
-      }
-    }
-
-    function calculateResult() {
-      const formData = new FormData(document.getElementById('quiz'));
-      const scores = {};
-      for (let [_, value] of formData.entries()) {
-        if (value !== 'None') {
-          scores[value] = (scores[value] || 0) + 1;
-        }
-      }
-      const topTrait = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
-      const resultText = fieldMatches[topTrait] || 'un mélange de domaines différents';
-
-      document.getElementById('quiz').style.display = 'none';
-      document.getElementById('results').textContent = `Votre domaine idéal : ${resultText}`;
-    }
-
-    renderQuiz();
-  </script>
-</body>
-</html>
+      { text: "I enjoy solving math or science problems in my spare time.", gif: "https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif", name: "q1", options: ["Investigative"] },
+      { text: "I like sketching, painting, or creating digital art.",
